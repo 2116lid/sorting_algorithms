@@ -1,63 +1,74 @@
 #include "sort.h"
 
 /**
- * quick_sort - Sorts an array of integers in ascending order
- * using quick sort with Lomuto partition scheme
- * @array: The array to be sorted
- * @size: Number of elements in the array
+ * quick_sort - function that sorts an array of integers in ascending
+ * order using the Quick sort algorithm
  *
+ * @array: pointer to the list array given
+ * @size: size of the list array
+ *
+ * Return: nothing
  */
+
 void quick_sort(int *array, size_t size)
 {
 	if (size < 2)
+	{
 		return;
+	}
 	quicksort_lomu(array, 0, size - 1, size);
 }
 
 /**
+ * partit_lom - quick sort lomuto partition process
+ * @array: pointer to array given
+ * @low: index of the first element in the list
+ * @high: index of the last element in the list
+ * @size: size of the array
+ * Return: an integer i.
+ */
+
+int partit_lom(int *array, int low, int high, size_t size)
+{
+	int pivot_value = array[high];
+	int i = low, j;
+
+	for (j = low; j < high; j++)
+	{
+		if (array[j] <= pivot_value)
+		{
+			if (i != j && array[i] != array[j])
+			{
+				swap(array, &array[i], &array[j], size);
+			}
+			i++;
+		}
+	}
+	if (high != low && array[high] != array[i])
+	{
+		swap(array, &array[i], &array[high], size);
+	}
+	return (i);
+}
+
+/**
  * swap - function that swap pointers value
+ * @array: list array given
  * @a: first pointer
  * @b: second pointer
+ * @size: size of the give array
  * Return: nothing
  */
-void swap(int *a, int *b)
+
+void swap(int *array, int *a, int *b, size_t size)
 {
 	int temp;
 
 	temp = *a;
 	*a = *b;
 	*b = temp;
-}
 
-/**
- * lomu_partition - quick sort lomuto partition process
- * @array: pointer to array given
- * @low: index of the first element in the list
- * @high: index of the last element in the list
- * @size: size of the array
- *
- * Return: an integer
- */
-int lomu_partition(int *array, int low, int high, int size)
-{
-	int pivot;
-	int i, j;
-
-	pivot = array[high];
-	i = low - 1;
-
-	for (j = low; j <= high - 1; j++)
-	{
-		if (array[j] < pivot)
-		{
-			i++;
-			swap(&array[i], &array[j]);
-			print_array(array, size);
-		}
-	}
-	swap(&array[i + 1], &array[high]);
 	print_array(array, size);
-	return (i + 1);
 }
 
 /**
@@ -66,17 +77,16 @@ int lomu_partition(int *array, int low, int high, int size)
  * @low: lowest value
  * @high: highest value
  * @size: size of the array
- *
  * Return: nothing
  */
-void quicksort_lomu(int *array, int low, int high, int size)
-{
-	int piv;
 
+void quicksort_lomu(int *array, int low, int high, size_t size)
+{
 	if (low < high)
 	{
-		piv = lomu_partition(array, low, high, size);
-		quicksort_lomu(array, low, piv - 1, size);
-		quicksort_lomu(array, piv + 1, high, size);
+		int piv_idx = partit_lom(array, low, high, size);
+
+		quicksort_lomu(array, low, piv_idx - 1, size);
+		quicksort_lomu(array, piv_idx + 1, high, size);
 	}
 }
